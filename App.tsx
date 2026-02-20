@@ -6,20 +6,29 @@ import { About } from './pages/About';
 import { Services } from './pages/Services';
 import { Showcase } from './pages/Showcase';
 import { Blog } from './pages/Blog';
+import { BlogPost } from './pages/BlogPost';
 import { Contact } from './pages/Contact';
 import { Page } from './types';
 
 const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<Page>('home');
+  const [currentPage, setCurrentPage] = useState<string>('home');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Handle hash routing
     const handleHash = () => {
-      const hash = window.location.hash.replace('#', '') as Page;
-      if (['home', 'about', 'services', 'showcase', 'blog', 'contact'].includes(hash)) {
+      const hash = window.location.hash.replace('#', '');
+      if (hash.startsWith('blog/')) {
         setCurrentPage(hash);
         window.scrollTo(0, 0);
+        return;
+      }
+      
+      if (['home', 'about', 'services', 'showcase', 'blog', 'contact'].includes(hash)) {
+        setCurrentPage(hash as Page);
+        window.scrollTo(0, 0);
+      } else if (hash === '') {
+        setCurrentPage('home');
       }
     };
 
@@ -54,6 +63,11 @@ const App: React.FC = () => {
   }
 
   const renderPage = () => {
+    if (currentPage.startsWith('blog/')) {
+      const slug = currentPage.split('/')[1];
+      return <BlogPost slug={slug} />;
+    }
+
     switch (currentPage) {
       case 'home': return <Home setPage={setPage} />;
       case 'about': return <About />;
@@ -67,7 +81,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar currentPage={currentPage} setPage={setPage} />
+      <Navbar currentPage={currentPage.split('/')[0] as Page} setPage={setPage} />
       
       <main className="flex-grow">
         {renderPage()}
