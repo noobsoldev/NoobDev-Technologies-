@@ -18,39 +18,14 @@ const notion = new Client({
   auth: process.env.NOTION_API_KEY
 });
 
-const DATABASE_NAME = "Blog CMS";
-let DATABASE_ID = "";
-
-// Helper to find database ID by name
-async function getDatabaseId() {
-  if (DATABASE_ID) return DATABASE_ID;
-  try {
-    const response = await notion.search({
-      query: DATABASE_NAME,
-      filter: {
-        value: 'database',
-        property: 'object'
-      }
-    });
-    if (response.results.length > 0) {
-      DATABASE_ID = response.results[0].id;
-      return DATABASE_ID;
-    }
-    throw new Error("Database not found");
-  } catch (error) {
-    console.error("Error finding database:", error);
-    return null;
-  }
-}
+const DATABASE_ID = "30df75bf205280eb94bac3b90c6f37d5";
 
 // API Routes
 app.get('/api/blog', async (req, res) => {
   try {
-    const dbId = await getDatabaseId();
-    if (!dbId) return res.status(500).json({ error: "Database configuration error" });
-
+    // Fetch with filter
     const response = await notion.databases.query({
-      database_id: dbId,
+      database_id: DATABASE_ID,
       filter: {
         property: 'Published',
         checkbox: {
@@ -65,6 +40,22 @@ app.get('/api/blog', async (req, res) => {
       ]
     });
 
+    console.log(`[Notion] Fetched ${response.results.length} published posts.`);
+
+    if (response.results.length === 0) {
+        // Log full properties of first result if available (which is none here, so maybe log empty)
+        // Or if the user meant "if zero results, log what we got" - but we got nothing.
+        // The request says "If zero, log full properties object." 
+        // This implies debugging why it's zero. 
+        // Let's try to fetch ONE without filter to debug if we get 0 with filter.
+        const debugResponse = await notion.databases.query({ database_id: DATABASE_ID, page_size: 1 });
+        if (debugResponse.results.length > 0) {
+            console.log("[Notion Debug] First row properties:", JSON.stringify((debugResponse.results[0] as any).properties, null, 2));
+        } else {
+            console.log("[Notion Debug] Database is empty.");
+        }
+    }
+
     const posts = response.results.map((page: any) => {
       const props = page.properties;
       return {
@@ -72,8 +63,10 @@ app.get('/api/blog', async (req, res) => {
         title: props.Title?.title[0]?.plain_text || "Untitled",
         slug: props.Slug?.rich_text[0]?.plain_text || page.id,
         date: props.Date?.date?.start || new Date().toISOString(),
+        // Map meta to excerpt as requested by UI needs
+        excerpt: props["Meta Description"]?.rich_text[0]?.plain_text || "", 
+        // Keep other fields for UI compatibility if they exist, or defaults
         category: props.Category?.select?.name || "General",
-        excerpt: props.Excerpt?.rich_text[0]?.plain_text || "",
         readTime: props.ReadTime?.rich_text[0]?.plain_text || "5 min read",
         image: page.cover?.external?.url || page.cover?.file?.url || "https://picsum.photos/800/400"
       };
@@ -88,14 +81,11 @@ app.get('/api/blog', async (req, res) => {
 
 app.get('/api/blog/:slug', async (req, res) => {
   try {
-    const dbId = await getDatabaseId();
-    if (!dbId) return res.status(500).json({ error: "Database configuration error" });
-
     const { slug } = req.params;
     
     // 1. Find the page by slug
     const response = await notion.databases.query({
-      database_id: dbId,
+      database_id: DATABASE_ID,
       filter: {
         property: 'Slug',
         rich_text: {

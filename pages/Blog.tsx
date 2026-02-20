@@ -25,11 +25,17 @@ export const Blog = () => {
     fetch('/api/blog')
       .then(res => res.json())
       .then(data => {
-        setPosts(data);
+        if (Array.isArray(data)) {
+          setPosts(data);
+        } else {
+          console.error("API returned non-array data:", data);
+          setPosts([]);
+        }
         setLoading(false);
       })
       .catch(err => {
         console.error("Failed to fetch posts", err);
+        setPosts([]);
         setLoading(false);
       });
   }, []);
