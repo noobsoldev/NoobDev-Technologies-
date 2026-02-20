@@ -84,7 +84,11 @@ export const BlogPost = () => {
     if (!slug) return;
     
     setLoading(true);
-    fetch(`/api/blog/${slug}`)
+    const url = process.env.NODE_ENV === 'production' 
+      ? `/data/blog/${slug}.json` 
+      : `/api/blog/${slug}`;
+
+    fetch(url)
       .then(res => {
         if (!res.ok) throw new Error("Post not found");
         return res.json();

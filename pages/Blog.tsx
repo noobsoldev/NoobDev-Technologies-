@@ -22,7 +22,11 @@ export const Blog = () => {
   const categories = ['All', 'Automation', 'Web Dev', 'Strategy', 'Case Study', 'Education'];
 
   useEffect(() => {
-    fetch('/api/blog')
+    const url = process.env.NODE_ENV === 'production' 
+      ? '/data/blog.json' 
+      : '/api/blog';
+
+    fetch(url)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {
