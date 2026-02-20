@@ -1,10 +1,11 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { BraceWrap } from '../components/Layout';
 import { SERVICES } from '../constants';
 import { Terminal, CodeSnippet } from '../components/Terminal';
 
-export const Services = ({ setPage }: { setPage: (p: any) => void }) => {
+export const Services = () => {
   return (
     <div className="page-transition pt-32 pb-20">
       <div className="max-w-7xl mx-auto px-6">
@@ -69,12 +70,12 @@ export const Services = ({ setPage }: { setPage: (p: any) => void }) => {
                     )}
                 </div>
 
-                <button 
-                  onClick={() => setPage('contact')}
-                  className="mt-10 bg-black text-white px-8 py-4 font-bold hover:bg-[#FF0000] transition-colors"
+                <Link 
+                  to="/contact"
+                  className="mt-10 inline-block bg-black text-white px-8 py-4 font-bold hover:bg-[#FF0000] transition-colors"
                 >
                   Start Your {s.title} →
-                </button>
+                </Link>
               </div>
 
               <div className="lg:w-1/2 w-full">

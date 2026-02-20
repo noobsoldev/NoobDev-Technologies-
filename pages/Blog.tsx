@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { BraceWrap } from '../components/Layout';
 import { Terminal } from '../components/Terminal';
 import ReactMarkdown from 'react-markdown';
@@ -89,9 +90,9 @@ export const Blog = () => {
                     {featuredPost.excerpt}
                   </p>
                   <div className="flex items-center justify-between">
-                    <a href={`#blog/${featuredPost.slug}`} className="text-sm font-bold border-b-2 border-[#FF0000] pb-1 hover:text-[#FF0000] transition-colors">
+                    <Link to={`/blog/${featuredPost.slug}`} className="text-sm font-bold border-b-2 border-[#FF0000] pb-1 hover:text-[#FF0000] transition-colors">
                       Read the Full Article →
-                    </a>
+                    </Link>
                     <span className="text-gray-400 text-xs font-mono tracking-tighter">[{featuredPost.readTime}]</span>
                   </div>
                 </div>
@@ -150,9 +151,9 @@ export const Blog = () => {
                   <p className="text-gray-500 text-sm leading-relaxed line-clamp-3 mb-6">
                     {post.excerpt}
                   </p>
-                  <a href={`#blog/${post.slug}`} className="text-xs font-bold font-mono uppercase tracking-widest flex items-center group-hover:translate-x-1 transition-transform">
+                  <Link to={`/blog/${post.slug}`} className="text-xs font-bold font-mono uppercase tracking-widest flex items-center group-hover:translate-x-1 transition-transform">
                     View Post <span className="ml-2 text-[#FF0000]">→</span>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </article>

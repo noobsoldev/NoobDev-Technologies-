@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Page } from '../types';
 
 export const Logo = ({ className = "" }: { className?: string }) => (
@@ -20,9 +21,11 @@ export const BraceWrap = ({ children, className = "" }: { children?: React.React
   </span>
 );
 
-export const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page) => void }) => {
+export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -30,41 +33,46 @@ export const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks: { label: string, value: Page }[] = [
-    { label: 'Home', value: 'home' },
-    { label: 'About', value: 'about' },
-    { label: 'Services', value: 'services' },
-    { label: 'Showcase', value: 'showcase' },
-    { label: 'Blog', value: 'blog' },
-    { label: 'Contact', value: 'contact' },
+  const navLinks: { label: string, value: string }[] = [
+    { label: 'Home', value: '/' },
+    { label: 'About', value: '/about' },
+    { label: 'Services', value: '/services' },
+    { label: 'Showcase', value: '/showcase' },
+    { label: 'Blog', value: '/blog' },
+    { label: 'Contact', value: '/contact' },
   ];
+
+  const isActive = (path: string) => {
+    if (path === '/' && location.pathname !== '/') return false;
+    return location.pathname.startsWith(path);
+  };
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        <button onClick={() => setPage('home')} className="cursor-pointer">
+        <Link to="/" className="cursor-pointer">
           <Logo className="text-2xl" />
-        </button>
+        </Link>
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
-            <button
+            <Link
               key={link.value}
-              onClick={() => setPage(link.value)}
+              to={link.value}
               className={`text-sm font-medium transition-colors hover:text-[#FF0000] ${
-                currentPage === link.value ? 'text-[#FF0000] border-b-2 border-[#FF0000]' : 'text-gray-600'
+                isActive(link.value) ? 'text-[#FF0000] border-b-2 border-[#FF0000]' : 'text-gray-600'
               }`}
             >
               {link.label}
-            </button>
+            </Link>
           ))}
-          <button 
-            onClick={() => setPage('contact')}
+          <Link 
+            to="/contact"
             className="bg-[#FF0000] text-white px-6 py-2 rounded-sm text-sm font-bold hover:bg-black transition-all duration-300"
           >
             Get Started
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Toggle */}
@@ -77,28 +85,31 @@ export const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-white border-t border-gray-100 shadow-xl py-6 px-6 flex flex-col space-y-4">
           {navLinks.map((link) => (
-            <button
+            <Link
               key={link.value}
-              onClick={() => { setPage(link.value); setIsMenuOpen(false); }}
-              className={`text-left text-lg font-bold ${currentPage === link.value ? 'text-[#FF0000]' : 'text-gray-900'}`}
+              to={link.value}
+              onClick={() => setIsMenuOpen(false)}
+              className={`text-left text-lg font-bold ${isActive(link.value) ? 'text-[#FF0000]' : 'text-gray-900'}`}
             >
-              {currentPage === link.value ? `{${link.label}}` : link.label}
-            </button>
+              {isActive(link.value) ? `{${link.label}}` : link.label}
+            </Link>
           ))}
-          <button 
-            onClick={() => { setPage('contact'); setIsMenuOpen(false); }}
-            className="bg-[#FF0000] text-white py-4 font-bold"
+          <Link 
+            to="/contact"
+            onClick={() => setIsMenuOpen(false)}
+            className="bg-[#FF0000] text-white py-4 font-bold text-center"
           >
             Get Started
-          </button>
+          </Link>
         </div>
       )}
     </nav>
   );
 };
 
-export const Footer = ({ setPage }: { setPage: (p: Page) => void }) => {
+export const Footer = () => {
   const [modalContent, setModalContent] = useState<{ title: string; content: React.ReactNode } | null>(null);
+  const navigate = useNavigate();
 
   const openModal = (type: 'privacy' | 'terms' | 'cookies') => {
     const contentMap = {
@@ -201,9 +212,9 @@ export const Footer = ({ setPage }: { setPage: (p: Page) => void }) => {
             <ul className="space-y-3">
               {['Home', 'About', 'Services', 'Showcase', 'Blog', 'Contact'].map((item) => (
                 <li key={item}>
-                  <button onClick={() => setPage(item.toLowerCase() as Page)} className="text-gray-600 hover:text-[#FF0000] text-sm transition-colors">
+                  <Link to={item === 'Home' ? '/' : `/${item.toLowerCase()}`} className="text-gray-600 hover:text-[#FF0000] text-sm transition-colors">
                     {item}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -213,9 +224,9 @@ export const Footer = ({ setPage }: { setPage: (p: Page) => void }) => {
             <ul className="space-y-3">
               {['AI Automation', 'Web Development', 'SEO Services', 'CRM Solutions'].map((item) => (
                 <li key={item}>
-                  <button onClick={() => setPage('services')} className="text-gray-600 hover:text-[#FF0000] text-sm transition-colors">
+                  <Link to="/services" className="text-gray-600 hover:text-[#FF0000] text-sm transition-colors">
                     {item}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>

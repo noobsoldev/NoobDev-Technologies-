@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Navbar, Footer } from './components/Layout';
 import { Home } from './pages/Home';
 import { About } from './pages/About';
@@ -8,45 +9,25 @@ import { Showcase } from './pages/Showcase';
 import { Blog } from './pages/Blog';
 import { BlogPost } from './pages/BlogPost';
 import { Contact } from './pages/Contact';
-import { Page } from './types';
 
-const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<string>('home');
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
+
+const AppContent = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Handle hash routing
-    const handleHash = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash.startsWith('blog/')) {
-        setCurrentPage(hash);
-        window.scrollTo(0, 0);
-        return;
-      }
-      
-      if (['home', 'about', 'services', 'showcase', 'blog', 'contact'].includes(hash)) {
-        setCurrentPage(hash as Page);
-        window.scrollTo(0, 0);
-      } else if (hash === '') {
-        setCurrentPage('home');
-      }
-    };
-
-    window.addEventListener('hashchange', handleHash);
-    handleHash();
-
     // Loading simulation
     const timer = setTimeout(() => setIsLoading(false), 1200);
-
-    return () => {
-      window.removeEventListener('hashchange', handleHash);
-      clearTimeout(timer);
-    };
+    return () => clearTimeout(timer);
   }, []);
-
-  const setPage = (page: Page) => {
-    window.location.hash = page;
-  };
 
   if (isLoading) {
     return (
@@ -62,38 +43,39 @@ const App: React.FC = () => {
     );
   }
 
-  const renderPage = () => {
-    if (currentPage.startsWith('blog/')) {
-      const slug = currentPage.split('/')[1];
-      return <BlogPost slug={slug} />;
-    }
-
-    switch (currentPage) {
-      case 'home': return <Home setPage={setPage} />;
-      case 'about': return <About />;
-      case 'services': return <Services setPage={setPage} />;
-      case 'showcase': return <Showcase />;
-      case 'blog': return <Blog />;
-      case 'contact': return <Contact />;
-      default: return <Home setPage={setPage} />;
-    }
-  };
-
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar currentPage={currentPage.split('/')[0] as Page} setPage={setPage} />
+      <Navbar />
+      <ScrollToTop />
       
       <main className="flex-grow">
-        {renderPage()}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/showcase" element={<Showcase />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<Home />} />
+        </Routes>
       </main>
 
-      <Footer setPage={setPage} />
+      <Footer />
       
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 w-full h-1 z-[60] pointer-events-none">
         <ScrollProgress />
       </div>
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 };
 

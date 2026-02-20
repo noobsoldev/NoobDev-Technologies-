@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { BraceWrap } from '../components/Layout';
 
@@ -73,12 +74,15 @@ const NotionBlock = ({ block }: { block: any }) => {
   }
 };
 
-export const BlogPost = ({ slug }: { slug: string }) => {
+export const BlogPost = () => {
+  const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    if (!slug) return;
+    
     setLoading(true);
     fetch(`/api/blog/${slug}`)
       .then(res => {
@@ -121,7 +125,7 @@ export const BlogPost = ({ slug }: { slug: string }) => {
         <div className="text-center">
             <h1 className="text-4xl font-bold mb-4">404</h1>
             <p className="text-gray-500 font-mono">Post not found in database.</p>
-            <a href="#blog" className="text-[#FF0000] hover:underline mt-4 block">← Back to Blog</a>
+            <Link to="/blog" className="text-[#FF0000] hover:underline mt-4 block">← Back to Blog</Link>
         </div>
       </div>
     );
@@ -166,9 +170,9 @@ export const BlogPost = ({ slug }: { slug: string }) => {
         </div>
 
         <div className="mt-16 pt-8 border-t border-gray-100">
-             <a href="#blog" className="inline-flex items-center text-sm font-bold hover:text-[#FF0000] transition-colors group">
+             <Link to="/blog" className="inline-flex items-center text-sm font-bold hover:text-[#FF0000] transition-colors group">
                 <span className="mr-2 group-hover:-translate-x-1 transition-transform">←</span> Back to all articles
-             </a>
+             </Link>
         </div>
       </div>
     </div>

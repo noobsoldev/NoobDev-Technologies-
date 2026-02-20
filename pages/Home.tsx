@@ -1,10 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { BraceWrap, Logo } from '../components/Layout';
 import { Terminal, CodeSnippet } from '../components/Terminal';
 import { SERVICES } from '../constants';
-import { Page } from '../types';
 
-export const Home = ({ setPage }: { setPage: (p: Page) => void }) => {
+export const Home = () => {
   const integrationPartners = [
     { name: 'Zapier', url: 'https://zapier.com', logo: 'https://cdn.simpleicons.org/zapier/FF6600' },
     { name: 'Make', url: 'https://make.com', logo: 'https://cdn.simpleicons.org/make/EA2127' },
@@ -34,18 +34,18 @@ export const Home = ({ setPage }: { setPage: (p: Page) => void }) => {
               The no-code automation studio that connects your apps, automates workflows, and scales your operations — all without a single line of code.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <button 
-                onClick={() => setPage('contact')}
+              <Link 
+                to="/contact"
                 className="bg-[#FF0000] text-white px-8 py-4 font-bold text-lg hover:bg-black transition-all flex items-center justify-center group"
               >
                 Start Automating <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
-              </button>
-              <button 
-                onClick={() => setPage('services')}
+              </Link>
+              <Link 
+                to="/services"
                 className="border-2 border-[#FF0000] text-black px-8 py-4 font-bold text-lg hover:bg-[#FF0000] hover:text-white transition-all flex items-center justify-center"
               >
                 See How It Works
-              </button>
+              </Link>
             </div>
           </div>
           
@@ -122,12 +122,12 @@ studio.deploy({
               <h2 className="text-4xl font-bold mb-4">Our <BraceWrap>Services</BraceWrap></h2>
               <p className="text-gray-600 max-w-lg">Everything you need to automate, scale, and thrive in the modern digital economy.</p>
             </div>
-            <button 
-                onClick={() => setPage('services')}
+            <Link 
+                to="/services"
                 className="text-[#FF0000] font-bold hover:underline"
             >
               View all services →
-            </button>
+            </Link>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -136,12 +136,12 @@ studio.deploy({
                 <div className="text-2xl font-mono text-[#FF0000] mb-6 group-hover:scale-110 transition-transform origin-left">{s.icon}</div>
                 <h3 className="text-xl font-bold mb-3">{s.title}</h3>
                 <p className="text-gray-600 text-sm mb-6 leading-relaxed">{s.description}</p>
-                <button 
-                    onClick={() => setPage('services')}
+                <Link 
+                    to="/services"
                     className="text-xs font-bold font-mono uppercase tracking-widest text-gray-400 group-hover:text-[#FF0000] transition-colors"
                 >
                   Learn more →
-                </button>
+                </Link>
               </div>
             ))}
           </div>
