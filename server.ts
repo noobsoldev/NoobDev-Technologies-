@@ -3,11 +3,32 @@ import { Client } from '@notionhq/client';
 import cors from 'cors';
 import { createServer as createViteServer } from 'vite';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
 
 dotenv.config();
 
 const app = express();
 const PORT = 3000;
+
+// Persistent storage setup
+const DATA_FILE = path.join(process.cwd(), 'interactions.json');
+
+const loadInteractions = () => {
+  if (!fs.existsSync(DATA_FILE)) {
+    return { likes: {}, comments: {} };
+  }
+  try {
+    const data = fs.readFileSync(DATA_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (e) {
+    return { likes: {}, comments: {} };
+  }
+};
+
+const saveInteractions = (data: any) => {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+};
 
 // Middleware
 app.use(cors());
@@ -124,6 +145,52 @@ app.get('/api/blog/:slug', async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch post" });
   }
+});
+
+// Interactions API
+app.get('/api/interactions/:slug', (req, res) => {
+  const { slug } = req.params;
+  const data = loadInteractions();
+  res.json({
+    likes: data.likes[slug] || 0,
+    comments: data.comments[slug] || []
+  });
+});
+
+app.post('/api/interactions/:slug/like', (req, res) => {
+  const { slug } = req.params;
+  const { action } = req.body; // 'like' or 'unlike'
+  const data = loadInteractions();
+  
+  if (!data.likes[slug]) data.likes[slug] = 0;
+  
+  if (action === 'like') {
+    data.likes[slug] += 1;
+  } else if (action === 'unlike' && data.likes[slug] > 0) {
+    data.likes[slug] -= 1;
+  }
+  
+  saveInteractions(data);
+  res.json({ likes: data.likes[slug] });
+});
+
+app.post('/api/interactions/:slug/comment', (req, res) => {
+  const { slug } = req.params;
+  const { user, text } = req.body;
+  const data = loadInteractions();
+  
+  if (!data.comments[slug]) data.comments[slug] = [];
+  
+  const comment = {
+    id: Date.now(),
+    user: user || 'Guest User',
+    date: 'Just now',
+    text
+  };
+  
+  data.comments[slug].unshift(comment);
+  saveInteractions(data);
+  res.json(comment);
 });
 
 // Vite Middleware

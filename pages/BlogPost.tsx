@@ -81,13 +81,44 @@ const BlogInteractions = ({ title, slug }: { title: string; slug: string }) => {
   const [showShare, setShowShare] = useState(false);
   const shareUrl = window.location.href;
 
-  const handleLike = () => {
-    if (liked) {
-      setLikesCount(prev => prev - 1);
-    } else {
-      setLikesCount(prev => prev + 1);
+  useEffect(() => {
+    // Fetch initial likes
+    fetch(`/api/interactions/${slug}`)
+      .then(res => res.json())
+      .then(data => {
+        setLikesCount(data.likes);
+      })
+      .catch(err => console.error("Failed to fetch likes", err));
+    
+    // Check if user already liked this post (local storage check)
+    const hasLiked = localStorage.getItem(`liked_${slug}`);
+    if (hasLiked) setLiked(true);
+  }, [slug]);
+
+  const handleLike = async () => {
+    const action = liked ? 'unlike' : 'like';
+    
+    try {
+      const response = await fetch(`/api/interactions/${slug}/like`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setLikesCount(data.likes);
+        setLiked(!liked);
+        
+        if (action === 'like') {
+          localStorage.setItem(`liked_${slug}`, 'true');
+        } else {
+          localStorage.removeItem(`liked_${slug}`);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to update like", err);
     }
-    setLiked(!liked);
   };
 
   const shareOnTwitter = () => {
@@ -139,23 +170,42 @@ const BlogInteractions = ({ title, slug }: { title: string; slug: string }) => {
   );
 };
 
-const CommentSection = () => {
+const CommentSection = ({ slug }: { slug: string }) => {
   const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetch(`/api/interactions/${slug}`)
+      .then(res => res.json())
+      .then(data => {
+        setComments(data.comments);
+      })
+      .catch(err => console.error("Failed to fetch comments", err));
+  }, [slug]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newComment.trim()) return;
+    if (!newComment.trim() || isSubmitting) return;
     
-    const comment = {
-      id: Date.now(),
-      user: 'Guest User',
-      date: 'Just now',
-      text: newComment
-    };
-    
-    setComments([comment, ...comments]);
-    setNewComment('');
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`/api/interactions/${slug}/comment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: newComment })
+      });
+      
+      if (response.ok) {
+        const comment = await response.json();
+        setComments([comment, ...comments]);
+        setNewComment('');
+      }
+    } catch (err) {
+      console.error("Failed to post comment", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -174,27 +224,32 @@ const CommentSection = () => {
         />
         <button 
           type="submit"
-          className="bg-black text-white px-6 py-3 font-bold text-sm hover:bg-[#FF0000] transition-colors flex items-center gap-2"
+          disabled={isSubmitting}
+          className="bg-black text-white px-6 py-3 font-bold text-sm hover:bg-[#FF0000] transition-colors flex items-center gap-2 disabled:bg-gray-400"
         >
-          Post Comment <Send className="w-4 h-4" />
+          {isSubmitting ? 'Posting...' : 'Post Comment'} <Send className="w-4 h-4" />
         </button>
       </form>
       
       <div className="space-y-8">
-        {comments.map(comment => (
-          <div key={comment.id} className="flex gap-4">
-            <div className="w-10 h-10 bg-gray-100 flex items-center justify-center font-bold text-[#FF0000] font-mono border border-gray-200 shrink-0">
-              {comment.user.charAt(0)}
-            </div>
-            <div>
-              <div className="flex items-center gap-3 mb-1">
-                <span className="font-bold text-sm">{comment.user}</span>
-                <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">{comment.date}</span>
+        {comments.length === 0 ? (
+          <p className="text-gray-400 italic text-sm">No comments yet. Be the first to start the conversation!</p>
+        ) : (
+          comments.map(comment => (
+            <div key={comment.id} className="flex gap-4">
+              <div className="w-10 h-10 bg-gray-100 flex items-center justify-center font-bold text-[#FF0000] font-mono border border-gray-200 shrink-0">
+                {comment.user.charAt(0)}
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed">{comment.text}</p>
+              <div>
+                <div className="flex items-center gap-3 mb-1">
+                  <span className="font-bold text-sm">{comment.user}</span>
+                  <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">{comment.date}</span>
+                </div>
+                <p className="text-gray-600 text-sm leading-relaxed">{comment.text}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
@@ -355,7 +410,7 @@ export const BlogPost = () => {
         
         <BlogSubscribe />
 
-        <CommentSection />
+        <CommentSection slug={post.slug} />
 
         <div className="mt-16 pt-8 border-t border-gray-100">
              <Link to="/blog" className="inline-flex items-center text-sm font-bold hover:text-[#FF0000] transition-colors group">
