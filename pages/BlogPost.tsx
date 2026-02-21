@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { BraceWrap } from '../components/Layout';
+import { Heart, Share2, MessageSquare, Twitter, Linkedin, Send, CheckCircle2 } from 'lucide-react';
 
 interface BlogPost {
   id: string;
@@ -72,6 +73,186 @@ const NotionBlock = ({ block }: { block: any }) => {
     default:
       return null;
   }
+};
+
+const BlogInteractions = ({ title, slug }: { title: string; slug: string }) => {
+  const [liked, setLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(Math.floor(Math.random() * 50) + 10);
+  const [showShare, setShowShare] = useState(false);
+  const shareUrl = window.location.href;
+
+  const handleLike = () => {
+    if (liked) {
+      setLikesCount(prev => prev - 1);
+    } else {
+      setLikesCount(prev => prev + 1);
+    }
+    setLiked(!liked);
+  };
+
+  const shareOnTwitter = () => {
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+  };
+
+  const shareOnLinkedIn = () => {
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+  };
+
+  return (
+    <div className="flex items-center justify-between py-8 border-y border-gray-100 my-12">
+      <div className="flex items-center gap-6">
+        <button 
+          onClick={handleLike}
+          className={`flex items-center gap-2 group transition-colors ${liked ? 'text-[#FF0000]' : 'text-gray-500 hover:text-[#FF0000]'}`}
+        >
+          <Heart className={`w-5 h-5 ${liked ? 'fill-current' : 'group-hover:scale-110 transition-transform'}`} />
+          <span className="font-mono text-sm font-bold">{likesCount}</span>
+        </button>
+        
+        <div className="relative">
+          <button 
+            onClick={() => setShowShare(!showShare)}
+            className="flex items-center gap-2 text-gray-500 hover:text-black transition-colors group"
+          >
+            <Share2 className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+            <span className="font-mono text-sm font-bold">Share</span>
+          </button>
+          
+          {showShare && (
+            <div className="absolute bottom-full left-0 mb-4 bg-white border border-gray-100 shadow-xl p-2 flex gap-2 animate-in slide-in-from-bottom-2 duration-200 z-30">
+              <button onClick={shareOnTwitter} className="p-2 hover:bg-gray-50 text-[#1DA1F2] transition-colors">
+                <Twitter className="w-5 h-5 fill-current" />
+              </button>
+              <button onClick={shareOnLinkedIn} className="p-2 hover:bg-gray-50 text-[#0A66C2] transition-colors">
+                <Linkedin className="w-5 h-5 fill-current" />
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+      
+      <a href="#comments" className="flex items-center gap-2 text-gray-500 hover:text-black transition-colors group">
+        <MessageSquare className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />
+        <span className="font-mono text-sm font-bold">Comments</span>
+      </a>
+    </div>
+  );
+};
+
+const CommentSection = () => {
+  const [comments, setComments] = useState([
+    { id: 1, user: 'Alex Rivera', date: '2 days ago', text: 'This automation workflow saved me so much time. Great breakdown!' },
+    { id: 2, user: 'Jordan Smith', date: '1 week ago', text: 'Can you do a follow-up on how to integrate this with Airtable specifically?' }
+  ]);
+  const [newComment, setNewComment] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newComment.trim()) return;
+    
+    const comment = {
+      id: Date.now(),
+      user: 'Guest User',
+      date: 'Just now',
+      text: newComment
+    };
+    
+    setComments([comment, ...comments]);
+    setNewComment('');
+  };
+
+  return (
+    <div id="comments" className="mt-16 pt-16 border-t border-gray-100">
+      <h3 className="text-2xl font-bold mb-8 flex items-center gap-3">
+        <BraceWrap className="text-lg">Comments</BraceWrap>
+        <span className="text-sm font-mono text-gray-400">({comments.length})</span>
+      </h3>
+      
+      <form onSubmit={handleSubmit} className="mb-12">
+        <textarea 
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          placeholder="Join the discussion..."
+          className="w-full bg-gray-50 border border-gray-200 p-4 min-h-[100px] focus:outline-none focus:border-[#FF0000] transition-colors mb-4 font-sans"
+        />
+        <button 
+          type="submit"
+          className="bg-black text-white px-6 py-3 font-bold text-sm hover:bg-[#FF0000] transition-colors flex items-center gap-2"
+        >
+          Post Comment <Send className="w-4 h-4" />
+        </button>
+      </form>
+      
+      <div className="space-y-8">
+        {comments.map(comment => (
+          <div key={comment.id} className="flex gap-4">
+            <div className="w-10 h-10 bg-gray-100 flex items-center justify-center font-bold text-[#FF0000] font-mono border border-gray-200 shrink-0">
+              {comment.user.charAt(0)}
+            </div>
+            <div>
+              <div className="flex items-center gap-3 mb-1">
+                <span className="font-bold text-sm">{comment.user}</span>
+                <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">{comment.date}</span>
+              </div>
+              <p className="text-gray-600 text-sm leading-relaxed">{comment.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const BlogSubscribe = () => {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    
+    setStatus('loading');
+    // Simulate API call
+    setTimeout(() => {
+      setStatus('success');
+      setEmail('');
+    }, 1000);
+  };
+
+  return (
+    <div className="bg-gray-50 border border-gray-100 p-8 md:p-12 my-16 text-center">
+      {status === 'success' ? (
+        <div className="animate-in zoom-in duration-300">
+          <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto mb-4" />
+          <h3 className="text-2xl font-bold mb-2">You're on the list!</h3>
+          <p className="text-gray-600">Get ready for the best automation insights in your inbox.</p>
+        </div>
+      ) : (
+        <>
+          <h3 className="text-2xl font-bold mb-4">Subscribe to <BraceWrap>Upcoming</BraceWrap> Posts</h3>
+          <p className="text-gray-600 mb-8 max-w-md mx-auto">Never miss a deep dive into business automation and no-code strategy.</p>
+          
+          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <input 
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com" 
+              required
+              className="flex-1 bg-white border border-gray-200 px-4 py-3 focus:outline-none focus:border-[#FF0000] transition-colors font-mono text-sm"
+            />
+            <button 
+              type="submit"
+              disabled={status === 'loading'}
+              className="bg-[#FF0000] text-white px-6 py-3 font-bold hover:bg-black transition-colors disabled:bg-gray-400"
+            >
+              {status === 'loading' ? 'Joining...' : 'Subscribe'}
+            </button>
+          </form>
+        </>
+      )}
+    </div>
+  );
 };
 
 export const BlogPost = () => {
@@ -172,6 +353,12 @@ export const BlogPost = () => {
             <NotionBlock key={block.id} block={block} />
           ))}
         </div>
+
+        <BlogInteractions title={post.title} slug={post.slug} />
+        
+        <BlogSubscribe />
+
+        <CommentSection />
 
         <div className="mt-16 pt-8 border-t border-gray-100">
              <Link to="/blog" className="inline-flex items-center text-sm font-bold hover:text-[#FF0000] transition-colors group">
