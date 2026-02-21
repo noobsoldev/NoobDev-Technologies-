@@ -3,12 +3,33 @@ import React, { useState } from 'react';
 import { BraceWrap } from '../components/Layout';
 
 export const Contact = () => {
-  const [formState, setFormState] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [formState, setFormState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormState('submitting');
-    setTimeout(() => setFormState('success'), 1500);
+    
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    
+    try {
+      const response = await fetch("https://formspree.io/f/mlgwwqbw", {
+        method: "POST",
+        body: data,
+        headers: {
+            'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        setFormState('success');
+        form.reset();
+      } else {
+        setFormState('error');
+      }
+    } catch (error) {
+      setFormState('error');
+    }
   };
 
   const faqs = [
@@ -46,21 +67,21 @@ export const Contact = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-xs font-mono text-gray-400 uppercase mb-2">Name *</label>
-                    <input required type="text" className="w-full bg-gray-50 border border-gray-200 px-4 py-3 focus:outline-none focus:border-[#FF0000]" />
+                    <input required name="name" type="text" className="w-full bg-gray-50 border border-gray-200 px-4 py-3 focus:outline-none focus:border-[#FF0000]" />
                   </div>
                   <div>
                     <label className="block text-xs font-mono text-gray-400 uppercase mb-2">Email *</label>
-                    <input required type="email" className="w-full bg-gray-50 border border-gray-200 px-4 py-3 focus:outline-none focus:border-[#FF0000]" />
+                    <input required name="email" type="email" className="w-full bg-gray-50 border border-gray-200 px-4 py-3 focus:outline-none focus:border-[#FF0000]" />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-xs font-mono text-gray-400 uppercase mb-2">Phone</label>
-                    <input type="tel" className="w-full bg-gray-50 border border-gray-200 px-4 py-3 focus:outline-none focus:border-[#FF0000]" />
+                    <input name="phone" type="tel" className="w-full bg-gray-50 border border-gray-200 px-4 py-3 focus:outline-none focus:border-[#FF0000]" />
                   </div>
                   <div>
                     <label className="block text-xs font-mono text-gray-400 uppercase mb-2">Service Interest</label>
-                    <select className="w-full bg-gray-50 border border-gray-200 px-4 py-3 focus:outline-none focus:border-[#FF0000] appearance-none">
+                    <select name="service" className="w-full bg-gray-50 border border-gray-200 px-4 py-3 focus:outline-none focus:border-[#FF0000] appearance-none">
                       <option>AI Automation</option>
                       <option>Custom Website</option>
                       <option>Landing Pages</option>
@@ -71,8 +92,15 @@ export const Contact = () => {
                 </div>
                 <div>
                   <label className="block text-xs font-mono text-gray-400 uppercase mb-2">Message *</label>
-                  <textarea required rows={4} className="w-full bg-gray-50 border border-gray-200 px-4 py-3 focus:outline-none focus:border-[#FF0000] resize-none"></textarea>
+                  <textarea required name="message" rows={4} className="w-full bg-gray-50 border border-gray-200 px-4 py-3 focus:outline-none focus:border-[#FF0000] resize-none"></textarea>
                 </div>
+                
+                {formState === 'error' && (
+                  <div className="text-red-600 text-sm font-bold text-center">
+                    Something went wrong. Please try again.
+                  </div>
+                )}
+
                 <button 
                   disabled={formState === 'submitting'}
                   className="w-full bg-[#FF0000] text-white py-4 font-bold text-lg hover:bg-black transition-all disabled:bg-gray-400"
