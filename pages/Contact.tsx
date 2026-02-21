@@ -77,7 +77,20 @@ export const Contact = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-xs font-mono text-gray-400 uppercase mb-2">Phone</label>
-                    <input name="phone" type="tel" className="w-full bg-gray-50 border border-gray-200 px-4 py-3 focus:outline-none focus:border-[#FF0000]" />
+                    <div className="flex">
+                      <select name="countryCode" className="w-24 bg-gray-50 border border-gray-200 border-r-0 px-2 py-3 focus:outline-none focus:border-[#FF0000] appearance-none text-sm">
+                        <option value="+1">+1 (US)</option>
+                        <option value="+44">+44 (UK)</option>
+                        <option value="+91">+91 (IN)</option>
+                        <option value="+61">+61 (AU)</option>
+                        <option value="+81">+81 (JP)</option>
+                        <option value="+49">+49 (DE)</option>
+                        <option value="+33">+33 (FR)</option>
+                        <option value="+86">+86 (CN)</option>
+                        <option value="+971">+971 (UAE)</option>
+                      </select>
+                      <input name="phone" type="tel" className="flex-1 w-full bg-gray-50 border border-gray-200 px-4 py-3 focus:outline-none focus:border-[#FF0000]" />
+                    </div>
                   </div>
                   <div>
                     <label className="block text-xs font-mono text-gray-400 uppercase mb-2">Service Interest</label>
