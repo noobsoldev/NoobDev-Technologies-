@@ -77,7 +77,7 @@ const NotionBlock = ({ block }: { block: any }) => {
 
 const BlogInteractions = ({ title, slug }: { title: string; slug: string }) => {
   const [liked, setLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(Math.floor(Math.random() * 50) + 10);
+  const [likesCount, setLikesCount] = useState(0);
   const [showShare, setShowShare] = useState(false);
   const shareUrl = window.location.href;
 
@@ -140,10 +140,7 @@ const BlogInteractions = ({ title, slug }: { title: string; slug: string }) => {
 };
 
 const CommentSection = () => {
-  const [comments, setComments] = useState([
-    { id: 1, user: 'Alex Rivera', date: '2 days ago', text: 'This automation workflow saved me so much time. Great breakdown!' },
-    { id: 2, user: 'Jordan Smith', date: '1 week ago', text: 'Can you do a follow-up on how to integrate this with Airtable specifically?' }
-  ]);
+  const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
