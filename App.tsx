@@ -31,7 +31,7 @@ const AppContent = () => {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 bg-white flex flex-center items-center justify-center z-[9999]">
+      <div className="fixed inset-0 bg-white flex items-center justify-center z-[9999]">
         <div className="flex items-center text-4xl font-bold animate-pulse">
           <span>Noob</span>
           <span className="text-[#FF0000] font-mono mx-1">{"{"}</span>

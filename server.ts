@@ -24,7 +24,7 @@ const DATABASE_ID = "30df75bf205280eb94bac3b90c6f37d5";
 app.get('/api/blog', async (req, res) => {
   try {
     // Fetch with filter
-    const response = await notion.databases.query({
+    const response = await (notion.databases as any).query({
       database_id: DATABASE_ID,
       filter: {
         property: 'Published',
@@ -48,7 +48,7 @@ app.get('/api/blog', async (req, res) => {
         // The request says "If zero, log full properties object." 
         // This implies debugging why it's zero. 
         // Let's try to fetch ONE without filter to debug if we get 0 with filter.
-        const debugResponse = await notion.databases.query({ database_id: DATABASE_ID, page_size: 1 });
+        const debugResponse = await (notion.databases as any).query({ database_id: DATABASE_ID, page_size: 1 });
         if (debugResponse.results.length > 0) {
             console.log("[Notion Debug] First row properties:", JSON.stringify((debugResponse.results[0] as any).properties, null, 2));
         } else {
@@ -84,7 +84,7 @@ app.get('/api/blog/:slug', async (req, res) => {
     const { slug } = req.params;
     
     // 1. Find the page by slug
-    const response = await notion.databases.query({
+    const response = await (notion.databases as any).query({
       database_id: DATABASE_ID,
       filter: {
         property: 'Slug',
