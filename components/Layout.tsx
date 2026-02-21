@@ -267,20 +267,20 @@ export const Footer = () => {
               ) : (
                 <>
                   <p className="text-sm text-gray-600 mb-4 font-mono leading-tight">Subscribe for automation insights, case studies & growth hacks:</p>
-                  <form onSubmit={handleNewsletterSubmit} className="flex">
+                  <form onSubmit={handleNewsletterSubmit} className="flex w-full">
                     <input 
                       required
                       name="email"
                       type="email" 
                       placeholder="your@email.com" 
                       aria-label="Email address for newsletter"
-                      className="bg-gray-50 border border-gray-200 px-4 py-2 text-sm w-full focus:outline-none focus:border-[#FF0000]" 
+                      className="bg-gray-50 border border-gray-200 px-4 py-2 text-sm flex-1 min-w-0 focus:outline-none focus:border-[#FF0000]" 
                     />
                     <button 
                       type="submit"
                       disabled={newsletterState === 'submitting'}
                       aria-label="Subscribe" 
-                      className="bg-[#FF0000] text-white px-4 py-2 hover:bg-black transition-colors disabled:bg-gray-400"
+                      className="bg-[#FF0000] text-white px-4 py-2 hover:bg-black transition-colors disabled:bg-gray-400 flex-shrink-0"
                     >
                       →
                     </button>
