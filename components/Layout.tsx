@@ -277,6 +277,7 @@ export const Footer = () => {
                       className="bg-gray-50 border border-gray-200 px-4 py-2 text-sm w-full focus:outline-none focus:border-[#FF0000]" 
                     />
                     <button 
+                      type="submit"
                       disabled={newsletterState === 'submitting'}
                       aria-label="Subscribe" 
                       className="bg-[#FF0000] text-white px-4 py-2 hover:bg-black transition-colors disabled:bg-gray-400"
