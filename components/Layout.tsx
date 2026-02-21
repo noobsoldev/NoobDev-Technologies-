@@ -109,7 +109,35 @@ export const Navbar = () => {
 
 export const Footer = () => {
   const [modalContent, setModalContent] = useState<{ title: string; content: React.ReactNode } | null>(null);
+  const [newsletterState, setNewsletterState] = useState<'idle' | 'submitting' | 'success'>('idle');
   const navigate = useNavigate();
+
+  const handleNewsletterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setNewsletterState('submitting');
+    
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    
+    try {
+      const response = await fetch("https://formspree.io/f/mgollgzq", {
+        method: "POST",
+        body: data,
+        headers: {
+            'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        setNewsletterState('success');
+        form.reset();
+      } else {
+        setNewsletterState('idle');
+      }
+    } catch (error) {
+      setNewsletterState('idle');
+    }
+  };
 
   const openModal = (type: 'privacy' | 'terms' | 'cookies') => {
     const contentMap = {
@@ -234,18 +262,30 @@ export const Footer = () => {
           <div>
             <h3 className="font-bold text-gray-900 mb-6 font-mono text-sm underline decoration-[#FF0000]">Connect</h3>
             <div className="mb-6">
-              <p className="text-sm text-gray-600 mb-4 font-mono leading-none">Subscribe to weekly tips:</p>
-              <div className="flex">
-                <input 
-                  type="email" 
-                  placeholder="your@email.com" 
-                  aria-label="Email address for newsletter"
-                  className="bg-gray-50 border border-gray-200 px-4 py-2 text-sm w-full focus:outline-none focus:border-[#FF0000]" 
-                />
-                <button aria-label="Subscribe" className="bg-[#FF0000] text-white px-4 py-2 hover:bg-black transition-colors">
-                  →
-                </button>
-              </div>
+              {newsletterState === 'success' ? (
+                <p className="text-sm text-gray-900 font-bold">Thanks for subscribing! You’ll hear from us soon 🚀</p>
+              ) : (
+                <>
+                  <p className="text-sm text-gray-600 mb-4 font-mono leading-tight">Subscribe for automation insights, case studies & growth hacks:</p>
+                  <form onSubmit={handleNewsletterSubmit} className="flex">
+                    <input 
+                      required
+                      name="email"
+                      type="email" 
+                      placeholder="your@email.com" 
+                      aria-label="Email address for newsletter"
+                      className="bg-gray-50 border border-gray-200 px-4 py-2 text-sm w-full focus:outline-none focus:border-[#FF0000]" 
+                    />
+                    <button 
+                      disabled={newsletterState === 'submitting'}
+                      aria-label="Subscribe" 
+                      className="bg-[#FF0000] text-white px-4 py-2 hover:bg-black transition-colors disabled:bg-gray-400"
+                    >
+                      →
+                    </button>
+                  </form>
+                </>
+              )}
             </div>
             <div className="flex space-x-4">
               <a href="https://x.com/noobdevtech" target="_blank" rel="noopener noreferrer" title="X (Twitter)" aria-label="X (Twitter)" className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:border-[#FF0000] hover:text-[#FF0000] transition-all">

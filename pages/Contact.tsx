@@ -131,21 +131,35 @@ export const Contact = () => {
                 <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest mb-6 border-b border-gray-100 pb-2">Location & Hours</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
-                    <p className="font-bold text-lg mb-1">San Francisco, CA</p>
-                    <p className="text-gray-500 text-sm">Remote worldwide</p>
+                    <p className="font-bold text-lg mb-1">Global Automation Services</p>
+                    <p className="text-gray-500 text-sm">Serving clients worldwide with remote-first automation solutions</p>
                   </div>
                   <div>
                     <p className="font-bold text-lg mb-1">Mon - Fri</p>
-                    <p className="text-gray-500 text-sm">9AM - 6PM (PST)</p>
+                    <p className="text-gray-500 text-sm">9AM - 6PM (IST)</p>
                   </div>
                 </div>
               </div>
+              
               <div>
                 <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest mb-6 border-b border-gray-100 pb-2">Direct Contact</h4>
                 <div className="space-y-4">
-                  <a href="mailto:hello@noobdev.studio" className="block font-bold text-2xl hover:text-[#FF0000] transition-colors">hello@noobdev.studio</a>
-                  <p className="text-xl font-bold">+1 (555) 012-3456</p>
+                  <a href="mailto:hello@noobdev.tech" className="block font-bold text-2xl hover:text-[#FF0000] transition-colors">hello@noobdev.tech</a>
                 </div>
+              </div>
+
+              <div>
+                <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest mb-6 border-b border-gray-100 pb-2">Need urgent automation help?</h4>
+                <p className="text-gray-600 mb-4">Connect instantly on WhatsApp for quick discussions, audits, or urgent automation needs.</p>
+                <a 
+                  href="https://wa.me/919717358684" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-block bg-[#25D366] text-white px-6 py-3 font-bold rounded-lg hover:bg-[#128C7E] transition-colors mb-2"
+                >
+                  Chat on WhatsApp →
+                </a>
+                <p className="text-xs text-gray-400">Typically replies within a few minutes during working hours.</p>
               </div>
             </div>
 
