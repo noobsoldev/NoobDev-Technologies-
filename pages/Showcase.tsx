@@ -45,7 +45,7 @@ export const Showcase = () => {
     : PROJECTS.filter(p => p.category === filter);
 
   useEffect(() => {
-    document.title = "Showcase | Noob{dev}";
+    document.title = "Showcase | Noob{Dev} Technologies";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute("content", "Real results for real businesses. Browse our portfolio of automated success stories.");

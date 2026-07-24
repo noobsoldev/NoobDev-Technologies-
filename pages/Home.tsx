@@ -4,15 +4,53 @@ import { BraceWrap, Logo } from '../components/Layout';
 import { Terminal, CodeSnippet } from '../components/Terminal';
 import { SERVICES } from '../constants';
 
+const FAQS = [
+  {
+    question: 'Do you build for businesses outside India?',
+    answer: "Yes — we work with clients globally. Our no-code, remote-first delivery model means location isn't a constraint; we also carry deep hands-on experience serving the Greater Noida / NCR region for clients who prefer that."
+  },
+  {
+    question: 'Can I get a custom e-commerce store built quickly?',
+    answer: 'In most cases, yes. Our rapid deployment workflow can launch a fully functional online store — payments and inventory included — in a matter of weeks, not months.'
+  },
+  {
+    question: 'What tools do you build with?',
+    answer: 'A modern stack of React, Next.js and Tailwind CSS for websites, Shopify/WooCommerce for e-commerce, and no-code platforms like Zapier, Make, Airtable and n8n for automation.'
+  },
+  {
+    question: 'How fast is delivery?',
+    answer: "Landing pages and simple automations typically ship within 48 hours. Full websites, e-commerce stores, and multi-step CRM builds take longer — we'll scope a timeline before you commit."
+  },
+  {
+    question: 'Do you offer affordable options for small and growing businesses?',
+    answer: 'Yes — our no-code approach lets us deliver premium-quality sites and automations at a fraction of the cost and timeline of a traditional dev agency.'
+  }
+];
+
 export const Home = () => {
   const [newsletterState, setNewsletterState] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [openFaq, setOpenFaq] = useState<number>(-1);
 
   useEffect(() => {
-    document.title = "Home | Noob{dev}";
+    document.title = "Home | Noob{Dev} Technologies";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
-      metaDesc.setAttribute("content", "Noobdev: We build custom automation workflows and high-performance websites for modern businesses.");
+      metaDesc.setAttribute("content", "Noob{Dev} Technologies: a global no-code studio building websites, e-commerce stores, and AI automation for growing businesses.");
     }
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: FAQS.map(f => ({
+        '@type': 'Question',
+        name: f.question,
+        acceptedAnswer: { '@type': 'Answer', text: f.answer }
+      }))
+    });
+    document.head.appendChild(script);
+    return () => { document.head.removeChild(script); };
   }, []);
 
   const handleNewsletterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -65,10 +103,10 @@ export const Home = () => {
               $ npm install growth --save-dev
             </div>
             <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6">
-              <BraceWrap>Automate</BraceWrap> Your Business Without Writing Code
+              <BraceWrap>Websites</BraceWrap>, AI Automation & E-commerce — Built Fast
             </h1>
             <p className="text-xl text-gray-700 mb-10 leading-relaxed max-w-xl">
-              The no-code automation studio that connects your apps, automates workflows, and scales your operations — all without a single line of code.
+              Noob<span className="font-mono text-[#FF0000]">{'{'}</span>Dev<span className="font-mono text-[#FF0000]">{'}'}</span> Technologies is a global no-code studio that builds websites, online stores, and AI-powered automation for growing businesses — wherever they are. Fast delivery, zero code required.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link 
@@ -97,11 +135,11 @@ studio.on('manual_task', (task) => {
 });
 
 // Connected Services
-const tools = ['Zapier', 'Make', 'Airtable', 'HubSpot'];
+const tools = ['Zapier', 'Make', 'Shopify', 'HubSpot'];
 studio.connect(tools);
 
 studio.deploy({
-  mode: 'scaling',
+  mode: 'global',
   code: false
 });`} />
             </Terminal>
@@ -109,51 +147,6 @@ studio.deploy({
         </div>
       </section>
 
-      {/* 100 Businesses Initiative Section */}
-      <section className="py-16 px-6 bg-black text-white overflow-hidden relative">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF0000] opacity-10 blur-[100px] -mr-32 -mt-32"></div>
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col lg:flex-row items-center gap-12 bg-[#111] border border-gray-800 p-8 md:p-12 relative z-10 rounded-lg">
-            <div className="lg:w-2/3">
-              <div className="inline-flex items-center gap-2 bg-[#FF0000] text-white px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-widest mb-6 rounded-sm">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                </span>
-                Limited Initiative
-              </div>
-              <h2 className="text-3xl md:text-5xl font-bold mb-6">
-                Helping <BraceWrap>100</BraceWrap> Local Businesses Grow Online
-              </h2>
-              <p className="text-gray-400 text-lg mb-8 max-w-2xl leading-relaxed">
-                We are onboarding 100 local businesses to build complete online systems that generate leads and automate growth. Not just a website, but a full business engine.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-                {[
-                  "Website + automation setup",
-                  "Built for real results",
-                  "Limited slots remaining"
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-[#FF0000]/20 flex items-center justify-center">
-                      <div className="w-2 h-2 bg-[#FF0000] rounded-full"></div>
-                    </div>
-                    <span className="text-sm font-mono text-gray-300">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="lg:w-1/3 w-full flex justify-center lg:justify-end">
-              <Link 
-                to="/apply"
-                className="bg-[#FF0000] text-white px-8 py-4 font-bold text-xl hover:bg-white hover:text-black transition-all shadow-xl hover:shadow-[#FF0000]/20 w-full lg:w-auto text-center rounded-lg"
-              >
-                Apply Now
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
       <section className="py-12 border-y border-gray-100 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <p className="text-center text-xs font-mono text-gray-500 mb-10 uppercase tracking-widest">Integrating your favorite tools</p>
@@ -274,7 +267,7 @@ studio.deploy({
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { name: 'Sarah Chen', role: 'COO, TechFlow', text: "Noob{dev} completely transformed our onboarding process. We save 15 hours a week per account manager." },
+              { name: 'Sarah Chen', role: 'COO, TechFlow', text: "Noob{Dev} completely transformed our onboarding process. We save 15 hours a week per account manager." },
               { name: 'Marcus Bell', role: 'Founder, RetailScale', text: "The ROI was immediate. Their AI automation handles our inventory updates perfectly." },
               { name: 'Elena Rodriguez', role: 'Director, MediaForge', text: "Cleanest integration we've ever seen. No more manual data entry between our CRM and Notion." },
             ].map((t, idx) => (
@@ -287,6 +280,34 @@ studio.deploy({
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-3xl mx-auto px-6">
+          <span className="font-mono text-xs text-[#FF0000] font-semibold">$ man faq</span>
+          <h2 className="text-4xl font-bold mt-4 mb-12">Frequently Asked <BraceWrap>Questions</BraceWrap></h2>
+          <div className="flex flex-col gap-3">
+            {FAQS.map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div key={idx} className="bg-white border border-gray-100 rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? -1 : idx)}
+                    aria-expanded={isOpen}
+                    className="w-full flex justify-between items-center gap-4 px-6 py-5 text-left font-bold text-black"
+                  >
+                    <span>{faq.question}</span>
+                    <span className="font-mono text-[#FF0000] text-lg flex-none">{isOpen ? '−' : '+'}</span>
+                  </button>
+                  {isOpen && (
+                    <p className="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</p>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -5,7 +5,7 @@ import { Terminal, CodeSnippet } from '../components/Terminal';
 
 export const About = () => {
   useEffect(() => {
-    document.title = "About | Noob{dev}";
+    document.title = "About | Noob{Dev} Technologies";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute("content", "Learn about Noobdev, our mission to democratize automation, and the team behind the code.");
@@ -16,7 +16,7 @@ export const About = () => {
     <div className="page-transition pt-32 pb-20">
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-20 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">About <BraceWrap>Noobdev</BraceWrap></h1>
+          <h1 className="text-5xl md:text-7xl font-bold mb-6">About Noob<span className="font-mono text-[#FF0000]">{'{'}</span>Dev<span className="font-mono text-[#FF0000]">{'}'}</span></h1>
           <p className="text-xl text-gray-700 font-mono italic underline decoration-[#FF0000] decoration-2 underline-offset-8">Making automation accessible to everyone</p>
         </div>
 
@@ -43,7 +43,7 @@ export const About = () => {
     approach: "No-code solutions",
     impact: "Save businesses time & money",
     founded: 2025,
-    team: "Noob{dev} Experts"
+    team: "Noob{Dev} Experts"
   };
 }
 

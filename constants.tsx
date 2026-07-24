@@ -4,15 +4,13 @@ import { Service, Project, BlogPost } from './types';
 
 export const SERVICES: Service[] = [
   {
-    id: 'ai-automation',
-    title: 'AI Automation',
-    description: 'Connect your apps and automate repetitive tasks with AI-powered workflows.',
-    icon: '{AI}',
-    detailedDescription: 'We connect your existing apps and automate repetitive manual tasks using advanced AI logic, saving your team hundreds of hours.',
-    features: ['Data entry and processing', 'Email workflows', 'Customer service bots', 'Report generation', 'Lead qualification'],
-    tools: ['Zapier', 'Make', 'n8n', 'OpenAI'],
-    pricing: 'From $499/mo',
-    timeline: '1-2 weeks'
+    id: 'custom-websites',
+    title: 'Custom Websites',
+    description: 'Modern, scalable web solutions tailored to your business needs.',
+    icon: '{WEB}',
+    detailedDescription: 'Full-featured corporate websites and web applications built with modern frameworks for scale and performance.',
+    tools: ['React', 'Next.js', 'Webflow', 'WordPress'],
+    timeline: '4-12 weeks'
   },
   {
     id: 'landing-pages',
@@ -25,13 +23,25 @@ export const SERVICES: Service[] = [
     timeline: '48-72 hours'
   },
   {
-    id: 'custom-websites',
-    title: 'Custom Websites',
-    description: 'Modern, scalable web solutions tailored to your business needs.',
-    icon: '{WEB}',
-    detailedDescription: 'Full-featured corporate websites and web applications built with modern frameworks for scale and performance.',
-    tools: ['React', 'Next.js', 'Webflow', 'WordPress'],
-    timeline: '4-12 weeks'
+    id: 'ecommerce',
+    title: 'E-commerce',
+    description: 'Full online stores built to sell — from product pages to checkout.',
+    icon: '{SHOP}',
+    detailedDescription: 'Headless and platform-based storefronts with automated inventory sync, cart-recovery flows, and payment integrations — built to convert from day one.',
+    features: ['Product & catalog setup', 'Payment gateway integration', 'Inventory sync automation', 'Cart-recovery flows'],
+    tools: ['Shopify', 'WooCommerce', 'Stripe'],
+    timeline: '2-6 weeks'
+  },
+  {
+    id: 'ai-automation',
+    title: 'AI Automation',
+    description: 'Connect your apps and automate repetitive tasks with AI-powered workflows.',
+    icon: '{AI}',
+    detailedDescription: 'We connect your existing apps and automate repetitive manual tasks using advanced AI logic, saving your team hundreds of hours.',
+    features: ['Data entry and processing', 'Email workflows', 'Customer service bots', 'Report generation', 'Lead qualification'],
+    tools: ['Zapier', 'Make', 'n8n', 'OpenAI'],
+    pricing: 'From $499/mo',
+    timeline: '1-2 weeks'
   },
   {
     id: 'seo-optimization',

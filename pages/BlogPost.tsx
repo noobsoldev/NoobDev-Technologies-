@@ -10,7 +10,7 @@ export const BlogPost = () => {
   const [newsletterState, setNewsletterState] = useState<'idle' | 'submitting' | 'success'>('idle');
 
   useEffect(() => {
-    document.title = "Blog Post | Noob{dev}";
+    document.title = "Blog Post | Noob{Dev} Technologies";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute("content", "Read the full article on Noobdev's blog.");

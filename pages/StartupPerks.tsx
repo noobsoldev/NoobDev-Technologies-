@@ -444,7 +444,7 @@ export const StartupPerks = () => {
   const [activeCategory, setActiveCategory] = useState("All Perks");
 
   useEffect(() => {
-    document.title = "Startup Perks | Noob{dev}";
+    document.title = "Startup Perks | Noob{Dev} Technologies";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute("content", "Discover over $1.5M in free cloud credits, AI API access, developer tools, and startup programs.");

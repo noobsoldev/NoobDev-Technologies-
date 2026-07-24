@@ -4,11 +4,16 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Page } from '../types';
 
 export const Logo = ({ className = "" }: { className?: string }) => (
-  <div className={`flex items-center font-poppins font-bold tracking-tight select-none ${className}`}>
-    <span className="text-black">Noob</span>
-    <span className="text-[#FF0000] font-mono mx-0.5">{"{"}</span>
-    <span className="text-black">dev</span>
-    <span className="text-[#FF0000] font-mono mx-0.5">{"}"}</span>
+  <div className={`inline-flex flex-col leading-none select-none ${className}`}>
+    <span className="flex items-baseline font-poppins font-extrabold tracking-tight">
+      <span className="text-black">Noob</span>
+      <span className="text-[#FF0000] font-mono mx-0.5">{"{"}</span>
+      <span className="text-black">Dev</span>
+      <span className="text-[#FF0000] font-mono mx-0.5">{"}"}</span>
+    </span>
+    <span className="font-mono text-[10px] tracking-[0.24em] uppercase text-gray-500 mt-1">
+      Technologies
+    </span>
   </div>
 );
 
@@ -39,7 +44,6 @@ export const Navbar = () => {
     { label: 'Services', value: '/services' },
     { label: 'Showcase', value: '/showcase' },
     { label: 'Blog', value: '/blog' },
-    { label: 'Startup Perks', value: '/perks' },
     { label: 'Contact', value: '/contact' },
   ];
 

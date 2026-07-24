@@ -20,7 +20,7 @@ export const Blog = () => {
   const categories = ['All', 'Automation', 'Web Dev', 'Strategy', 'Case Study', 'Education'];
 
   useEffect(() => {
-    document.title = "Blog | Noob{dev}";
+    document.title = "Blog | Noob{Dev} Technologies";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute("content", "Deep dives into business automation, no-code architecture, and the future of work.");

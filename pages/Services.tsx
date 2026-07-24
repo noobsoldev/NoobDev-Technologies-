@@ -7,7 +7,7 @@ import { Terminal, CodeSnippet } from '../components/Terminal';
 
 export const Services = () => {
   useEffect(() => {
-    document.title = "Services | Noob{dev}";
+    document.title = "Services | Noob{Dev} Technologies";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute("content", "Explore our technical expertise in AI workflows, custom web development, and business automation.");

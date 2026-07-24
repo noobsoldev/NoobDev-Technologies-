@@ -6,7 +6,7 @@ export const Contact = () => {
   const [formState, setFormState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
   useEffect(() => {
-    document.title = "Contact | Noob{dev}";
+    document.title = "Contact | Noob{Dev} Technologies";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute("content", "Ready to automate your workflows? Send us a message and we'll get back to you within 24 hours.");
